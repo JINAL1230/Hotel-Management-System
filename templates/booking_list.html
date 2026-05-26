@@ -1,0 +1,246 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Bookings</title>
+
+<style>
+
+/* ===== GLOBAL ===== */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    display:flex;
+    background:#020d18;
+    color:#e2e8f0;
+}
+
+/* ===== SIDEBAR (SAME AS DASHBOARD) ===== */
+.sidebar{
+    width:300px;
+    height:100vh;
+    background:linear-gradient(180deg,#020d18,#081b2e);
+    padding:25px;
+    border-right:1px solid #1e293b;
+}
+
+.sidebar h2{
+    color:#facc15;
+    margin-bottom:30px;
+}
+
+.sidebar a{
+    display:block;
+    padding:12px;
+    margin-bottom:10px;
+    color:#94a3b8;
+    text-decoration:none;
+    border-radius:10px;
+    transition:0.3s;
+}
+
+.sidebar a:hover{
+    background:rgba(250,204,21,0.08);
+    color:#facc15;
+}
+
+.sidebar a.active{
+    background:rgba(250,204,21,0.15);
+    color:#facc15;
+}
+
+/* ===== MAIN ===== */
+.main{
+    flex:1;
+    padding:30px;
+}
+
+/* ===== HEADER ===== */
+.header h1{
+    font-size:26px;
+    margin-bottom:20px;
+}
+
+/* ===== CARD ===== */
+.card{
+    background:rgba(30,41,59,0.6);
+    backdrop-filter:blur(10px);
+    padding:20px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,0.05);
+}
+
+/* ===== TABLE ===== */
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:14px;
+    text-align:left;
+}
+
+th{
+    color:#94a3b8;
+    font-size:14px;
+    border-bottom:1px solid #334155;
+}
+
+td{
+    border-bottom:1px solid #1e293b;
+}
+
+/* ===== STATUS BADGES ===== */
+.badge{
+    padding:5px 10px;
+    border-radius:20px;
+    font-size:12px;
+}
+
+/* booking status */
+.pending{
+    background:rgba(250,204,21,0.15);
+    color:#facc15;
+}
+
+.confirmed{
+    background:rgba(34,197,94,0.15);
+    color:#22c55e;
+}
+
+.cancelled{
+    background:rgba(239,68,68,0.15);
+    color:#ef4444;
+}
+
+/* ===== BUTTONS ===== */
+.btn{
+    padding:6px 12px;
+    border-radius:6px;
+    border:none;
+    cursor:pointer;
+    font-size:12px;
+}
+
+/* GOLD GLOW BUTTON */
+.btn-gold{
+    background:transparent;
+    border:1px solid #facc15;
+    color:#facc15;
+}
+
+.btn-gold:hover{
+    box-shadow:0 0 10px rgba(250,204,21,0.6);
+}
+
+/* RED BUTTON */
+.btn-red{
+    background:transparent;
+    border:1px solid #ef4444;
+    color:#ef4444;
+}
+
+.btn-red:hover{
+    box-shadow:0 0 10px rgba(239,68,68,0.6);
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1000px){
+    table{
+        font-size:12px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h2>LuxeStay</h2>
+
+    <a href="{% url 'dashboard_home' %}">Dashboard</a>
+    <a href="{% url 'rooms_detail' %}">Rooms</a>
+    <a href="{% url 'bookings_detail' %}" class="active">Bookings</a>
+    <a href="{% url 'customers_detail' %}">Customers</a>
+    <a href="{% url 'payment_dashboard' %}">Payments</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<div class="header">
+    <h1>Booking Management</h1>
+</div>
+
+<div class="card">
+
+<table>
+
+<thead>
+<tr>
+    <th>ID</th>
+    <th>Customer</th>
+    <th>Room</th>
+    <th>Check-in</th>
+    <th>Check-out</th>
+    <th>Guests</th>
+    <th>Status</th>
+    <th>Payment</th>
+    <th>Amount</th>
+    
+</tr>
+</thead>
+
+<tbody>
+{% for b in bookings %}
+<tr>
+    <td>BK{{ b.id }}</td>
+    <td>{{ b.first_name }} {{ b.last_name }}</td>
+    <td>{{ b.room.name }}</td>
+    <td>{{ b.check_in }}</td>
+    <td>{{ b.check_out }}</td>
+    <td>{{ b.guests }}</td>
+
+    <!-- STATUS -->
+    <td>
+        <span class="badge 
+        {% if b.status == 'confirmed' %}confirmed
+        {% elif b.status == 'cancelled' %}cancelled
+        {% else %}pending{% endif %}">
+            {{ b.status }}
+        </span>
+    </td>
+
+    <!-- PAYMENT -->
+    <td>
+        <span class="badge 
+        {% if b.payment_status == 'paid' %}confirmed
+        {% else %}pending{% endif %}">
+            {{ b.payment_status }}
+        </span>
+    </td>
+
+    <td>₹{{ b.total_price }}</td>
+
+   
+</tr>
+{% endfor %}
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>

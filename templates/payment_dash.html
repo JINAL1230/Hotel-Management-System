@@ -1,0 +1,287 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Payment Tracking</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+/* ===== GLOBAL ===== */
+body {
+    margin:0;
+    font-family:'Segoe UI';
+    background:#020d18;
+    color:#e2e8f0;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+    width:260px;
+    height:100vh;
+    background:#0f172a;
+    position:fixed;
+    padding:25px;
+}
+
+.sidebar h2{
+    color:#facc15;
+    margin-bottom:30px;
+}
+
+.sidebar a{
+    display:block;
+    padding:12px;
+    margin-bottom:10px;
+    color:#94a3b8;
+    text-decoration:none;
+    border-radius:10px;
+    transition:0.3s;
+}
+.sidebar a:hover,
+.sidebar a.active {
+    background:rgba(250,204,21,0.1);
+    color:#facc15;
+}
+
+/* ===== MAIN ===== */
+.main {
+    margin-left:280px;
+    padding:45px;
+    padding-top: 5px;
+}
+
+/* ===== HEADER ===== */
+h1 {
+    margin-bottom:5px;
+}
+
+.subtext {
+    color:#94a3b8;
+    margin-bottom:20px;
+}
+
+/* ===== CARDS ===== */
+.cards {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+
+.card {
+    background:#0f2235;
+    padding:20px;
+    border-radius:14px;
+}
+
+.card h2 {
+    color:#facc15;
+}
+
+/* ===== CHART ===== */
+.chart-card {
+    margin-top:20px;
+    background:#0f2235;
+    padding:20px;
+    border-radius:14px;
+}
+
+/* 👇 SMALL CHART BOX */
+.chart-box {
+    height:400px;
+    max-width:600px;
+    margin-top:10px;
+}
+
+/* ===== TABLE ===== */
+.table-card {
+    margin-top:20px;
+    background:#0f2235;
+    padding:20px;
+    border-radius:14px;
+}
+
+table {
+    width:100%;
+    border-collapse:collapse;
+}
+
+th, td {
+    padding:14px;
+    text-align:left;
+}
+
+th {
+    color:#94a3b8;
+    border-bottom:1px solid #1e293b;
+}
+
+tr {
+    border-bottom:1px solid #1e293b;
+}
+
+/* ===== BADGES ===== */
+.badge {
+    padding:6px 10px;
+    border-radius:12px;
+    font-size:12px;
+}
+
+.paid {
+    background:rgba(34,197,94,0.2);
+    color:#22c55e;
+}
+
+.pending {
+    background:rgba(250,204,21,0.2);
+    color:#facc15;
+}
+
+.refunded {
+    background:rgba(239,68,68,0.2);
+    color:#ef4444;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h2>LuxeStay Admin</h2>
+
+    <a href="{% url 'dashboard_home' %}">Dashboard</a>
+    <a href="{% url 'rooms_detail' %}">Rooms</a>
+    <a href="{% url 'bookings_detail' %}">Bookings</a>
+    <a href="{% url 'customers_detail' %}">Customers</a>
+    <a href="{% url 'payment_dashboard' %}" class="active">Payments</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<h1>Payment Tracking</h1>
+<p class="subtext">Monitor all payments and transactions</p>
+
+<!-- CARDS -->
+<div class="cards">
+
+    <div class="card">
+        <h2>₹{{ total_paid }}</h2>
+        <p>Total Paid</p>
+    </div>
+
+    <div class="card">
+        <h2>₹{{ pending }}</h2>
+        <p>Pending Payments</p>
+    </div>
+
+    <div class="card">
+        <h2>₹{{ total_revenue }}</h2>
+        <p>Total Revenue</p>
+    </div>
+
+</div>
+
+<!-- CHART -->
+<div class="chart-card">
+    <h3>Revenue Overview</h3>
+
+    <div class="chart-box">
+        <canvas id="revenueChart"></canvas>
+    </div>
+</div>
+
+<!-- TABLE -->
+<div class="table-card">
+
+<h3>All Transactions</h3>
+
+<table>
+<tr>
+    <th>ID</th>
+    <th>Customer</th>
+    <th>Booking</th>
+    <th>Date</th>
+    <th>Status</th>
+    <th>Amount</th>
+</tr>
+
+{% for b in bookings %}
+<tr>
+    <td>TXN{{ b.id }}</td>
+    <td>{{ b.first_name }}</td>
+    <td>BK{{ b.id }}</td>
+    <td>{{ b.created_at|date:"Y-m-d" }}</td>
+
+    <td>
+        <span class="badge 
+        {% if b.payment_status == 'paid' %}paid
+        {% elif b.payment_status == 'pending' %}pending
+        {% else %}refunded{% endif %}">
+            {{ b.payment_status }}
+        </span>
+    </td>
+
+    <td>₹{{ b.total_price }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+</div>
+
+<!-- CHART SCRIPT -->
+<script>
+const ctx = document.getElementById('revenueChart').getContext('2d');
+
+/* 🔥 GOLD GRADIENT */
+const gradient = ctx.createLinearGradient(0, 0, 0, 250);
+gradient.addColorStop(0, 'rgba(250,204,21,0.5)');
+gradient.addColorStop(1, 'rgba(250,204,21,0)');
+
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: {{ months|safe }},
+        datasets: [{
+            label: 'Revenue',
+            data: {{ totals|safe }},
+            borderColor: '#facc15',
+            backgroundColor: gradient,
+            pointBackgroundColor: '#facc15',
+            pointBorderColor: '#fff',
+            fill: true,
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,  /* 🔥 IMPORTANT */
+
+        plugins: {
+            legend: {
+                labels: { color: '#e2e8f0' }
+            }
+        },
+        scales: {
+            x: {
+                ticks: { color: '#94a3b8' },
+                grid: { color: 'rgba(148,163,184,0.1)' }
+            },
+            y: {
+                ticks: { color: '#94a3b8' },
+                grid: { color: 'rgba(148,163,184,0.1)' }
+            }
+        }
+    }
+});
+</script>
+
+</body>
+</html>

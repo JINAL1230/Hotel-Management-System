@@ -1,0 +1,360 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard</title>
+
+<style>
+
+/* ===== GLOBAL ===== */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    display:flex;
+    background:#020d18;
+    color:#e2e8f0;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+    width:300px;
+    height:100vh;
+    background:linear-gradient(180deg,#020d18,#081b2e);
+    padding:25px;
+    border-right:1px solid #1e293b;
+}
+
+.sidebar h2{
+    color:#facc15;
+    margin-bottom:30px;
+}
+
+.sidebar a{
+    display:block;
+    padding:12px;
+    margin-bottom:10px;
+    color:#94a3b8;
+    text-decoration:none;
+    border-radius:10px;
+    transition:0.3s;
+}
+
+.sidebar a:hover{
+    background:rgba(250,204,21,0.08);
+    color:#facc15;
+}
+
+.sidebar a.active{
+    background:rgba(250,204,21,0.15);
+    color:#facc15;
+}
+
+/* ===== MAIN ===== */
+.main{
+    flex:1;
+    padding:30px;
+}
+
+/* ===== HEADER ===== */
+.header h1{
+    font-size:28px;
+}
+
+.header p{
+    color:#94a3b8;
+    margin-bottom:25px;
+}
+
+/* ===== CARDS ===== */
+.cards{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+}
+
+.card{
+    background:rgba(30,41,59,0.6);
+    backdrop-filter:blur(10px);
+    padding:20px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,0.05);
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+
+.card h2{
+    font-size:26px;
+    margin-bottom:5px;
+}
+
+.card small{
+    color:#94a3b8;
+}
+
+/* ===== GRID ===== */
+.grid{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:20px;
+    margin-top:25px;
+}
+
+/* ===== SECTION ===== */
+.section{
+    background:rgba(30,41,59,0.5);
+    padding:20px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,0.05);
+}
+
+/* ===== CHART ===== */
+canvas{
+    width:100% !important;
+    height:260px !important;
+}
+
+/* ===== STATS ===== */
+.stat{
+    display:flex;
+    justify-content:space-between;
+    padding:12px;
+    margin-bottom:10px;
+    background:#0f172a;
+    border-radius:8px;
+}
+
+/* ===== TABLE ===== */
+table{
+    width:100%;
+    margin-top:15px;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:12px;
+}
+
+th{
+    color:#94a3b8;
+    border-bottom:2px solid #334155;
+}
+
+td{
+    border-bottom:2px solid #1e293b;
+}
+
+/* ===== STATUS ===== */
+.status{
+    padding:5px 10px;
+    border-radius:6px;
+    font-size:12px;
+}
+
+.checked{color:#22c55e;}
+.pending{color:#facc15;}
+.cancelled{color:#ef4444;}
+
+/* ===== GOLD BUTTON ===== */
+.btn-gold{
+    border:1px solid #facc15;
+    color:#facc15;
+    background:transparent;
+    padding:6px 12px;
+    border-radius:6px;
+}
+
+.btn-gold:hover{
+    box-shadow:0 0 10px rgba(250,204,21,0.6);
+}
+.logout-btn {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    padding: 8px 16px;
+    font-size: 12px;
+    background:#334155;   
+    color:beige;        
+    text-decoration: none;
+    border-radius: 20px;
+    font-weight:none;
+    letter-spacing: 1px;
+    transition: 0.3s ease;
+}
+
+.logout-btn:hover {
+    background: #cc0000;
+    color: #fff;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1000px){
+    .cards{grid-template-columns:repeat(2,1fr);}
+    .grid{grid-template-columns:1fr;}
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h2>LuxeStay</h2>
+
+    <a href="{% url 'dashboard_home' %}" class="active">Dashboard</a>
+    <a href="{% url 'rooms_detail' %}">Rooms</a>
+    <a href="{% url 'bookings_detail' %}">Bookings</a>
+    <a href="{% url 'customers_detail' %}">Customers</a>
+    <a href="{% url 'payment_dashboard' %}">Payments</a>
+    <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<div class="header">
+    <h1>Dashboard Overview</h1>
+    <p>{{ today }}</p>
+</div>
+
+<!-- CARDS -->
+<div class="cards">
+    <div class="card">
+        <h2>{{ total_rooms }}</h2>
+        <small>Total Rooms</small>
+    </div>
+
+    <div class="card">
+        <h2>{{ total_bookings }}</h2>
+        <small>Total Bookings</small>
+    </div>
+
+    <div class="card">
+        <h2>{{ total_customers }}</h2>
+        <small>Total Customers</small>
+    </div>
+
+    <div class="card">
+        <h2>${{ total_revenue }}</h2>
+        <small>Total Revenue</small>
+    </div>
+</div>
+
+<!-- GRID -->
+<div class="grid">
+
+    <!-- CHART -->
+    <div class="section">
+        <h3>Revenue Overview</h3>
+        <canvas id="revenueChart"></canvas>
+    </div>
+
+    <!-- STATS -->
+    <div class="section">
+        <h3>Quick Stats</h3>
+
+        <div class="stat">
+            <span>Check-ins</span>
+            <strong>{{ checkins_today }}</strong>
+        </div>
+
+        <div class="stat">
+            <span>Check-outs</span>
+            <strong>{{ checkouts_today }}</strong>
+        </div>
+
+        <div class="stat">
+            <span>Customers</span>
+            <strong>{{ current_customers }}</strong>
+        </div>
+
+        <div class="stat">
+            <span>Revenue</span>
+            <strong>${{ revenue_today }}</strong>
+        </div>
+    </div>
+
+</div>
+
+<!-- TABLE -->
+<div class="section">
+    <h3>Recent Bookings</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Room</th>
+                <th>Check-in</th>
+                <th>Status</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for booking in recent_bookings %}
+        <tr>
+            <td>BK{{ booking.id }}</td>
+            <td>{{ booking.user.username }}</td>
+            <td>{{ booking.room.name }}</td>
+            <td>{{ booking.check_in }}</td>
+
+            <td>
+                {% if booking.check_out < today %}
+                    <span class="status checked">Done</span>
+                {% else %}
+                    <span class="status pending">Active</span>
+                {% endif %}
+            </td>
+
+            <td>${{ booking.total_price }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</div>
+
+<!-- CHART -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+    const ctx = document.getElementById('revenueChart');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ months|safe }},
+            datasets: [{
+                data: {{ revenue_data|safe }},
+                backgroundColor: '#facc15'
+            }]
+        },
+        options:{
+            plugins:{legend:{display:false}},
+            scales:{
+                x:{ticks:{color:'#94a3b8'}},
+                y:{ticks:{color:'#94a3b8'}}
+            }
+        }
+    });
+
+});
+</script>
+
+</body>
+</html>

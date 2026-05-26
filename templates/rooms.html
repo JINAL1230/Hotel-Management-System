@@ -1,0 +1,204 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rooms</title>
+
+    <style>
+        body {
+            margin:0;
+            font-family:'Segoe UI', sans-serif;
+            background:#081521;
+            color:white;
+        }
+
+        .title {
+            text-align:center;
+            font-size:44px;
+            margin-top:40px;
+            font-weight:700;
+        }
+
+        .subtitle {
+            text-align:center;
+            color:#9aa4af;
+            margin-bottom:40px;
+        }
+
+        .rooms {
+            display:grid;
+            grid-template-columns:repeat(auto-fit, minmax(320px,1fr));
+            gap:30px;
+            padding:40px 80px;
+        }
+
+        .room-card {
+            background:#0f1f2e;
+            border-radius:18px;
+            overflow:hidden;
+            box-shadow:0 10px 30px rgba(0,0,0,0.5);
+            transition:0.3s;
+            border:1px solid rgba(255,255,255,0.05);
+        }
+
+        .room-card:hover {
+            transform:translateY(-8px);
+            box-shadow:0 20px 50px rgba(0,0,0,0.8);
+        }
+
+        .room-img {
+            position:relative;
+        }
+
+        .room-img img {
+            width:100%;
+            height:220px;
+            object-fit:cover;
+        }
+
+        .badge {
+            position:absolute;
+            top:12px;
+            left:12px;
+            background:#f0b25b;
+            color:black;
+            font-size:12px;
+            padding:5px 10px;
+            border-radius:20px;
+            font-weight:600;
+        }
+
+        .content {
+            padding:20px;
+        }
+
+        .room-card h3 {
+            margin:0;
+            font-size:20px;
+            font-weight:600;
+        }
+
+        .room-card p {
+            color:#9aa4af;
+            font-size:14px;
+            margin:10px 0 15px;
+        }
+
+        .features {
+            display:flex;
+            flex-wrap:wrap;
+            gap:8px;
+            margin-bottom:15px;
+        }
+
+        .feature {
+            background:#1a2c3d;
+            padding:5px 10px;
+            border-radius:12px;
+            font-size:12px;
+            color:#ccc;
+        }
+
+        .bottom {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        .price {
+            font-size:20px;
+            font-weight:700;
+            color:#f0b25b;
+        }
+
+        .actions {
+            display:flex;
+            gap:10px;
+        }
+
+        .view-btn {
+            padding:8px 14px;
+            border:1px solid #f0b25b;
+            color:#f0b25b;
+            text-decoration:none;
+            border-radius:20px;
+            font-size:13px;
+            transition:0.3s;
+        }
+
+        .view-btn:hover {
+            background:#f0b25b;
+            color:black;
+        }
+
+        .book-btn {
+            padding:8px 16px;
+            background:#f0b25b;
+            color:black;
+            text-decoration:none;
+            border-radius:20px;
+            font-weight:600;
+            font-size:13px;
+            transition:0.3s;
+        }
+
+        .book-btn:hover {
+            background:white;
+            color:black;
+        }
+
+        @media(max-width:768px){
+            .rooms{
+                padding:20px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<h1 class="title">Our Rooms & Suites</h1>
+<p class="subtitle">Choose from our premium collection of rooms</p>
+
+<div class="rooms">
+    {% for room in rooms %}
+    <div class="room-card">
+
+        <div class="room-img">
+            {% if room.image %}
+                <img src="{{ room.image.url }}">
+            {% else %}
+                <img src="{% static 'image1.jpg' %}">
+            {% endif %}
+
+            <div class="badge">⭐ Premium</div>
+        </div>
+
+        <div class="content">
+            <h3>{{ room.name }}</h3>
+            <p>{{ room.description }}</p>
+
+            <!-- Static features (UI only, no logic change) -->
+            <div class="features">
+                <span class="feature">AC</span>
+                <span class="feature">WiFi</span>
+                <span class="feature">TV</span>
+            </div>
+
+            <div class="bottom">
+                <span class="price">₹{{ room.price }}</span>
+
+                <div class="actions">
+                    <a href="{% url 'room_detail' room.id %}" class="view-btn">View</a>
+                    <a href="{% url 'room_detail' room.id %}" class="book-btn">Book</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+</body>
+</html>

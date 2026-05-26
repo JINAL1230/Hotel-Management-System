@@ -1,0 +1,193 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Customers</title>
+
+<style>
+
+/* ===== GLOBAL ===== */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    display:flex;
+    background:#020d18;
+    color:#e2e8f0;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+    width:300px;
+    height:100vh;
+    background:linear-gradient(180deg,#020d18,#081b2e);
+    padding:25px;
+    border-right:1px solid #1e293b;
+}
+
+.sidebar h2{
+    color:#facc15;
+    margin-bottom:30px;
+}
+
+.sidebar a{
+    display:block;
+    padding:12px;
+    margin-bottom:10px;
+    color:#94a3b8;
+    text-decoration:none;
+    border-radius:10px;
+    transition:0.3s;
+}
+
+.sidebar a:hover{
+    background:rgba(250,204,21,0.08);
+    color:#facc15;
+}
+
+.sidebar a.active{
+    background:rgba(250,204,21,0.15);
+    color:#facc15;
+}
+
+/* ===== MAIN ===== */
+.main{
+    flex:1;
+    padding:30px;
+}
+
+/* ===== HEADER ===== */
+.header h1{
+    font-size:26px;
+}
+
+.header p{
+    color:#94a3b8;
+    margin-bottom:20px;
+}
+
+/* ===== CARD ===== */
+.card{
+    background:rgba(30,41,59,0.6);
+    backdrop-filter:blur(10px);
+    padding:20px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,0.05);
+}
+
+/* ===== TABLE ===== */
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:14px;
+    text-align:left;
+}
+
+th{
+    color:#94a3b8;
+    border-bottom:1px solid #334155;
+}
+
+td{
+    border-bottom:1px solid #1e293b;
+}
+
+/* ===== STATUS ===== */
+.status{
+    padding:5px 10px;
+    border-radius:20px;
+    font-size:12px;
+}
+
+.active{
+    background:rgba(34,197,94,0.15);
+    color:#22c55e;
+}
+
+.inactive{
+    background:rgba(239,68,68,0.15);
+    color:#ef4444;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1000px){
+    table{
+        font-size:12px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h2>LuxeStay</h2>
+
+    <a href="{% url 'dashboard_home' %}">Dashboard</a>
+    <a href="{% url 'rooms_detail' %}">Rooms</a>
+    <a href="{% url 'bookings_detail' %}">Bookings</a>
+    <a href="{% url 'customers_detail' %}" class="active">Customers</a>
+    <a href="{% url 'payment_dashboard' %}">Payments</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<div class="header">
+    <h1>Customer Management</h1>
+    <p>View and manage customer accounts</p>
+</div>
+
+<div class="card">
+
+<table>
+
+<thead>
+<tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Total Bookings</th>
+    <th>Total Spent</th>
+    <th>Join Date</th>
+    <th>Status</th>
+</tr>
+</thead>
+
+<tbody>
+{% for c in customers %}
+<tr>
+    <td>C{{ c.id }}</td>
+    <td>{{ c.name }}</td>
+    <td>{{ c.email }}</td>
+    <td>{{ c.total_bookings }}</td>
+    <td>₹{{ c.total_spent }}</td>
+    <td>{{ c.join_date|date:"Y-m-d" }}</td>
+
+    <td>
+        <span class="status {% if c.status == 'Active' %}active{% else %}inactive{% endif %}">
+            {{ c.status }}
+        </span>
+    </td>
+</tr>
+{% endfor %}
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>

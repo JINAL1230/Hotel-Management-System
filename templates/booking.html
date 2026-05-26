@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Complete Your Booking</title>
+<style>
+* { box-sizing: border-box; font-family: 'Segoe UI'; }
+body { margin:0; background:linear-gradient(135deg,#06192b,#020d18); color:white; }
+.container { width:1200px; margin:auto; padding:40px 0; }
+.title { font-size:32px; margin-bottom:30px; }
+.grid { display:grid; grid-template-columns:2fr 1fr; gap:30px; }
+.card { background:#0c2238; padding:25px; border-radius:12px; margin-bottom:20px; }
+.card h3 { margin-top:0; }
+input, textarea { width:100%; padding:12px; margin-top:6px; margin-bottom:15px; border-radius:6px; border:none; background:#081726; color:white; }
+.row { display:grid; grid-template-columns:1fr 1fr; gap:15px; }
+.service { display:flex; justify-content:space-between; padding:15px; border:1px solid #203a56; border-radius:8px; margin-bottom:10px; cursor:pointer; }
+.summary img { width:100%; border-radius:8px; }
+.total { display:flex; justify-content:space-between; font-size:20px; margin:20px 0; }
+.pay-btn { width:100%; padding:14px; background:#f9b554; border:none; border-radius:8px; font-weight:bold; cursor:pointer; }
+input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor:pointer; }
+.error { color: #ff6b6b; font-weight:bold; margin-bottom:15px; }
+</style>
+</head>
+
+<body>
+<div class="container">
+<h1 class="title">Complete Your Booking</h1>
+
+{% if error %}
+<p class="error">{{ error }}</p>
+{% endif %}
+
+<form method="POST" action="{% url 'booking' room.id %}">
+{% csrf_token %}
+<div class="grid">
+
+<!-- LEFT SIDE -->
+ 
+<div>
+    <div class="card">
+        <h3>Stay Details</h3>
+        <div class="row">
+            <div>
+                <label>Check-in Date</label>
+                <input type="date" name="checkin" required>
+            </div>
+            <div>
+                <label>Check-out Date</label>
+                <input type="date" name="checkout" required>
+            </div>
+        </div>
+        <label>Number of Guests</label>
+        <input type="number" name="guests" value="1">
+    </div>
+
+    <div class="card">
+        <h3>Guest Information</h3>
+        <div class="row">
+            <div><label>First Name</label><input type="text" name="fname" required></div>
+            <div><label>Last Name</label><input type="text" name="lname"></div>
+        </div>
+        <div class="row">
+            <div><label>Email</label><input type="email" name="email" required></div>
+            <div><label>Phone</label><input type="text" name="phone"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Add-on Services</h3>
+        <label class="service"><div><input type="checkbox" value="1500" class="serviceCheck"> Spa & Wellness Package</div><span>₹1500</span></label>
+        <label class="service"><div><input type="checkbox" value="500" class="serviceCheck"> Airport Pickup Service</div><span>₹500</span></label>
+        <label class="service"><div><input type="checkbox" value="1000" class="serviceCheck"> Full Meal Package</div><span>₹1000</span></label>
+    </div>
+
+    <div class="card">
+        <h3>Special Requests</h3>
+        <textarea name="requests" rows="3" placeholder="Any special requests..."></textarea>
+    </div>
+</div>
+
+<!-- RIGHT SIDE -->
+<div class="card summary">
+    <img id="roomImage" src="{{ room.image.url }}" alt="{{ room.name }}">
+    <h3 id="roomName">{{ room.name }}</h3>
+    <p>Price per night: ₹<span id="price_per_night">{{ room.price }}</span></p>
+
+    <!-- Hidden Inputs -->
+    <input type="hidden" id="room_price" value="{{ room.price }}">
+    <input type="hidden" id="total_input" name="total" value="0">
+
+    <hr>
+    <div class="total">
+        <span>Total</span>
+        <span id="total">₹0</span>
+    </div>
+    <button type="submit" class="pay-btn">Proceed to Payment</button>
+</div>
+
+</div>
+</form>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const roomPrice = parseFloat(document.getElementById("room_price").value);
+    const serviceCheckboxes = document.querySelectorAll(".serviceCheck");
+    const totalDisplay = document.getElementById("total");
+    const totalInput = document.getElementById("total_input");
+
+    const checkinInput = document.querySelector('input[name="checkin"]');
+    const checkoutInput = document.querySelector('input[name="checkout"]');
+
+    function calculateTotal() {
+        const checkin = new Date(checkinInput.value);
+        const checkout = new Date(checkoutInput.value);
+
+        // Calculate nights
+        let nights = 1;
+        if (checkin && checkout && checkout > checkin) {
+            const diffTime = checkout - checkin;
+            nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        }
+
+        // Room price × nights
+        let total = roomPrice * nights;
+
+        // Add-ons
+        serviceCheckboxes.forEach(cb => {
+            if (cb.checked) total += parseFloat(cb.value);
+        });
+
+        // Update display and hidden input
+        totalDisplay.textContent = "₹" + total;
+        totalInput.value = total;
+    }
+
+    // Trigger recalculation
+    checkinInput.addEventListener("change", calculateTotal);
+    checkoutInput.addEventListener("change", calculateTotal);
+    serviceCheckboxes.forEach(cb => cb.addEventListener("change", calculateTotal));
+
+    calculateTotal(); // initial
+});
+</script>
+
+</body>
+</html>

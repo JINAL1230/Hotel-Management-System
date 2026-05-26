@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Booking Success</title>
+<style>
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Body */
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #06192b, #0b2a4d);
+    color: #fff;
+}
+
+/* Card */
+.success-card {
+    background: rgba(27, 42, 61, 0.95);
+    padding: 50px 40px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    animation: fadeIn 1s ease-out;
+    max-width: 400px;
+    width: 90%;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Icon */
+.success-icon {
+    font-size: 60px;
+    color: #f5c542;
+    margin-bottom: 20px;
+}
+
+/* Heading */
+h1 {
+    font-size: 28px;
+    margin-bottom: 15px;
+}
+
+/* Message */
+p {
+    font-size: 16px;
+    color: #c1c1c1;
+}
+a{
+    display:inline-block;
+    margin-top:20px;
+    padding:12px 20px;
+    background:#ffd23f;
+    color:black;
+    text-decoration:none;
+    font-weight:bold;
+    border-radius:6px;
+}
+
+a:hover{
+    opacity:0.9;
+}
+</style>
+</head>
+<body>
+
+<div class="success-card">
+    <div class="success-icon">✅</div>
+    <h1>Thank You for Your Booking!</h1>
+    <p>We have received your booking. Have a great stay!</p>
+    <a href="/">Go to Home</a>
+</div>
+
+</body>
+</html>

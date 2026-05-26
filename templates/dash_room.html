@@ -1,0 +1,262 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Rooms</title>
+
+<style>
+
+/* ===== GLOBAL ===== */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    display:flex;
+    background:#020d18;
+    color:#e2e8f0;
+}
+
+/* ===== SIDEBAR (CONSISTENT) ===== */
+.sidebar{
+    width:300px;
+    height:100vh;
+    background:linear-gradient(180deg,#020d18,#081b2e);
+    padding:25px;
+    border-right:1px solid #1e293b;
+}
+
+.sidebar h2{
+    color:#facc15;
+    margin-bottom:30px;
+}
+
+.sidebar a{
+    display:block;
+    padding:12px;
+    margin-bottom:10px;
+    color:#94a3b8;
+    text-decoration:none;
+    border-radius:10px;
+    transition:0.3s;
+}
+
+.sidebar a:hover{
+    background:rgba(250,204,21,0.08);
+    color:#facc15;
+}
+
+.sidebar a.active{
+    background:rgba(250,204,21,0.15);
+    color:#facc15;
+}
+
+
+/* ===== MAIN ===== */
+.main{
+    flex:1;
+    padding:30px;
+}
+
+/* ===== HEADER ===== */
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.header h1{
+    font-size:26px;
+}
+
+.header p{
+    color:#94a3b8;
+    margin-top:5px;
+}
+
+/* ===== ADD BUTTON (GOLD GLOW) ===== */
+.add-btn{
+    border:1px solid #facc15;
+    background:transparent;
+    color:#facc15;
+    padding:10px 16px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.add-btn:hover{
+    box-shadow:0 0 12px rgba(250,204,21,0.6);
+}
+
+/* ===== CARD ===== */
+.card{
+    margin-top:20px;
+    background:rgba(30,41,59,0.6);
+    backdrop-filter:blur(10px);
+    padding:20px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,0.05);
+}
+
+/* ===== SEARCH ===== */
+.search-box{
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    border:none;
+    margin-bottom:20px;
+    background:#0f172a;
+    color:white;
+}
+
+/* ===== TABLE ===== */
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:14px;
+    text-align:left;
+}
+
+th{
+    color:#94a3b8;
+    border-bottom:1px solid #334155;
+}
+
+td{
+    border-bottom:1px solid #1e293b;
+}
+
+/* ===== STATUS ===== */
+.status{
+    padding:5px 10px;
+    border-radius:20px;
+    font-size:12px;
+}
+
+.available{
+    background:rgba(34,197,94,0.15);
+    color:#22c55e;
+}
+
+.unavailable{
+    background:rgba(239,68,68,0.15);
+    color:#ef4444;
+}
+
+/* ===== ACTION BUTTONS ===== */
+.btn{
+    padding:6px 12px;
+    border-radius:6px;
+    border:none;
+    cursor:pointer;
+    font-size:12px;
+}
+
+/* edit = blue glow */
+.btn-edit{
+    border:1px solid #38bdf8;
+    color:#38bdf8;
+    background:transparent;
+}
+
+.btn-edit:hover{
+    box-shadow:0 0 10px rgba(56,189,248,0.6);
+}
+
+/* delete = red glow */
+.btn-delete{
+    border:1px solid #ef4444;
+    color:#ef4444;
+    background:transparent;
+}
+
+.btn-delete:hover{
+    box-shadow:0 0 10px rgba(239,68,68,0.6);
+}
+
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1000px){
+    table{
+        font-size:12px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h2>LuxeStay</h2>
+
+    <a href="{% url 'dashboard_home' %}">Dashboard</a>
+    <a href="{% url 'rooms_detail' %}" class="active">Rooms</a>
+    <a href="{% url 'bookings_detail' %}">Bookings</a>
+    <a href="{% url 'customers_detail' %}">Customers</a>
+    <a href="{% url 'payment_dashboard' %}">Payments</a>
+   
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<div class="header">
+    <div>
+        <h1>Room Management</h1>
+        <p>Manage hotel rooms and availability</p>
+    </div>
+
+    
+</div>
+
+<div class="card">
+
+<input type="text" class="search-box" placeholder="Search rooms...">
+
+<table>
+
+<thead>
+<tr>
+    <th>Room Name</th>
+    <th>Price</th>
+    <th>Status</th>
+   
+</tr>
+</thead>
+
+<tbody>
+{% for room in rooms %}
+<tr>
+    <td>{{ room.name }}</td>
+    <td>₹{{ room.price }}</td>
+
+    <td>
+        {% if room.available %}
+            <span class="status available">Available</span>
+        {% else %}
+            <span class="status unavailable">Unavailable</span>
+        {% endif %}
+    </td>
+
+    
+</tr>
+{% endfor %}
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<title>LuxeStay Login</title>
+
+<style>
+*{
+box-sizing:border-box;
+font-family:Segoe UI;
+}
+
+body{
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#06192b,#020d18);
+color:white;
+}
+
+.container{
+text-align:center;
+}
+
+.subtitle{
+color:#a7b6c7;
+margin-bottom:30px;
+}
+
+.card{
+width:380px;
+background:#1d2a3a;
+padding:30px;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,0.4);
+}
+
+input{
+width:100%;
+padding:12px;
+margin-top:10px;
+border-radius:8px;
+border:1px solid #3b4b5c;
+background:#0e1a28;
+color:white;
+}
+
+button{
+width:100%;
+margin-top:20px;
+padding:12px;
+background:#ffd23f;
+border:none;
+font-weight:bold;
+cursor:pointer;
+}
+
+.admin{
+margin-top:15px;
+}
+
+.admin a{
+color:#d4af37;
+text-decoration:none;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Welcome to LuxeStay</h1>
+<div class="subtitle">Sign in to manage your bookings</div>
+
+<div class="card">
+
+<form method="POST" action="/login/">
+{% csrf_token %}
+<input type="text" name="email" placeholder="Enter email">
+<input type="password" name="password" placeholder="Enter Password">
+
+<button type="submit">Login</button>
+
+</form>
+
+<!-- SHOW ERROR -->
+ {% if messages %}
+  {% for message in messages %}
+    <p style="color:yellow;">{{ message }}</p>
+  {% endfor %}
+{% endif %}
+
+<div class="admin">
+Admin? <a href="/dashboard/adminlogin/">Login here</a>
+</div>
+
+</div>
+
+</div>
+
+</body> 
+</html>

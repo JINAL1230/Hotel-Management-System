@@ -1,0 +1,279 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<title>Luxe Stay Hotel</title>
+
+<style>
+
+body{
+margin:0;
+font-family:'Poppins',sans-serif;
+background:#0b1d2a;
+color:white;
+}
+
+/* NAVBAR */
+
+nav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 60px;
+background:rgba(18,43,60,0.7);
+backdrop-filter:blur(10px);
+position:sticky;
+top:0;
+z-index:1000;
+
+}
+
+.logo img {
+  height: 55px;
+}
+
+nav ul{
+display:flex;
+gap:30px;
+list-style:none;
+
+}
+
+nav ul li a{
+color:#fabd38;
+text-decoration:none;
+font-size:18px;
+position:relative;
+font-weight:bold; 
+transition:0.3s;
+}
+
+nav ul li a:hover{
+color:white;
+}
+
+nav ul li a::after{
+content:'';
+position:absolute;
+width:0%;
+height:2px;
+background:#f0cd22;
+left:0;
+bottom:-5px;
+transition:0.3s;
+}
+
+nav ul li a:hover::after{
+width:100%;
+}
+
+/* HERO SECTION */
+
+.hero{
+height:90vh;
+background:
+linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),
+url("{% static 'image_hero1.jpg' %}") center/cover no-repeat;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
+
+.hero h1{
+font-size:60px;
+margin-bottom:25px;
+letter-spacing:1px;
+}
+
+.book-btn{
+padding:14px 30px;
+background:#e9a546;
+color:black;
+text-decoration:none;
+border-radius:30px;
+font-weight:bold;
+transition:0.3s;
+}
+
+.book-btn:hover{
+background:white;
+color:black;
+transform:scale(1.05);
+}
+
+/* SECTION */
+
+.section{
+padding:80px;
+text-align:center;
+}
+
+.section h2{
+font-size:35px;
+margin-bottom:20px;
+}
+
+/* ROOMS */
+
+.rooms{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:30px;
+margin-top:40px;
+}
+
+.room-card{
+background:rgba(18,43,60,0.8);
+border-radius:15px;
+overflow:hidden;
+box-shadow:0 10px 30px rgba(0,0,0,0.5);
+transition:0.4s;
+}
+
+.room-card:hover{
+transform:translateY(-10px) scale(1.02);
+}
+
+.room-card img{
+width:100%;
+height:220px;
+object-fit:cover;
+}
+
+.room-card h3{
+color:#f0b25b;
+margin-top:10px;
+}
+
+.room-card p{
+padding:10px 20px 20px;
+color:#ccc;
+}
+
+/* FACILITIES */
+
+.facilities{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:20px;
+margin-top:40px;
+}
+
+.facility{
+background:rgba(18,43,60,0.8);
+padding:25px;
+border-radius:12px;
+color:#f0b25b;
+font-weight:bold;
+transition:0.3s;
+}
+
+.facility:hover{
+background:#f0b25b;
+color:black;
+transform:scale(1.05);
+}
+
+/* FOOTER */
+
+footer{
+background:#122B3C;
+padding:30px;
+text-align:center;
+margin-top:40px;
+color:#ccc;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav>
+
+<div class="logo">
+<img src="{% static 'logo.png' %}" alt="Luxe Stay Hotel Logo">
+</div>
+
+<ul>
+<li><a href="/">Home</a></li>
+<li><a href="/rooms/">Rooms</a></li>
+<li><a href="/login/">Login</a></li>
+</ul>
+
+</nav>
+
+<!-- HERO SECTION -->
+
+<section class="hero">
+
+<h1>Experience Luxury Like Never Before</h1>
+
+<a href="{% url 'room' %}" class="book-btn">Book Your Stay</a>
+
+</section>
+
+<!-- ROOMS -->
+
+<section class="section">
+
+<h2>Featured Rooms</h2>
+
+<div class="rooms">
+
+<div class="room-card">
+<img src="{% static 'image1.jpg' %}">
+<h3>Deluxe Room</h3>
+<p>Luxury comfort with city view</p>
+</div>
+
+<div class="room-card">
+<img src="{% static 'image2.jpg' %}">
+<h3>Executive Suite</h3>
+<p>Premium suite with private lounge</p>
+</div>
+
+<div class="room-card">
+<img src="{% static 'image4.jpg' %}">
+<h3>Royal Suite</h3>
+<p>Ultimate five star experience</p>
+</div>
+
+</div>
+
+</section>
+
+<!-- FACILITIES -->
+
+<section class="section">
+
+<h2>Our Facilities</h2>
+
+<div class="facilities">
+
+<div class="facility">Free WiFi</div>
+<div class="facility">Swimming Pool</div>
+<div class="facility">Spa & Wellness</div>
+<div class="facility">Gym Access</div>
+<div class="facility">24/7 Room Service</div>
+<div class="facility">Airport Pickup</div>
+<div class="facility">Restaurant</div>
+<div class="facility">Conference Hall</div>
+<div class="facility">Smart TV</div>
+<div class="facility">Parking</div>
+
+</div>
+
+</section>
+
+<footer>
+<p>© 2026 Luxury Hotel. All Rights Reserved</p>
+</footer>
+
+</body>
+</html>
